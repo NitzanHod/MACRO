@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <title>MACRO: Training-free Multi-plane Attention for Closeup Render Optimization</title>
+  <meta name="title" content="MACRO: Training-free Multi-plane Attention for Closeup Render Optimization">
+  <meta name="description" content="MACRO is a training-free method for high-quality close-up novel view synthesis from 3D Gaussian Splatting. It resolves the scale gap between close-up and reference views using depth-plane decomposition and depth-aware cross-view attention.">
+  <meta name="keywords" content="close-up novel view synthesis, 3D Gaussian Splatting, 3DGS, diffusion, cross-view attention, depth planes, scale gap, novel view synthesis">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nitzanhod.github.io/MACRO/">
+  <meta property="og:title" content="MACRO: Training-free Multi-plane Attention for Closeup Render Optimization">
+  <meta property="og:description" content="Training-free close-up novel view synthesis from 3DGS using depth-aware cross-view attention.">
+  <meta property="og:image" content="https://nitzanhod.github.io/MACRO/static/images/teaser.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://nitzanhod.github.io/MACRO/">
+  <meta property="twitter:title" content="MACRO: Training-free Multi-plane Attention for Closeup Render Optimization">
+  <meta property="twitter:description" content="Training-free close-up novel view synthesis from 3DGS using depth-aware cross-view attention.">
+  <meta property="twitter:image" content="https://nitzanhod.github.io/MACRO/static/images/teaser.jpg">
+
+  <link rel="canonical" href="https://nitzanhod.github.io/MACRO/">
+
+  <!-- Favicon -->
+  <link rel="icon" href="static/images/favicon.ico">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <style>
+    .caption { color: #555; font-size: 0.95rem; margin-top: 0.6rem; }
+    .traj-tabs { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .traj-tabs button {
+      border: 1px solid #7b2d5e; background: #fff; color: #7b2d5e;
+      padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-weight: 600;
+    }
+    .traj-tabs button.active { background: #7b2d5e; color: #fff; border-color: #7b2d5e; }
+    .traj-pane { display: none; }
+    .traj-pane.active { display: block; }
+    .vid-tile { margin-bottom: 2.5rem; }
+    .vid-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .vid-col { flex: 1 1 0; min-width: 200px; max-width: 33%; text-align: center; }
+    .vid-col video { width: 100%; border-radius: 6px; background: #000; }
+    .vid-col .lbl { font-weight: 600; margin-bottom: 4px; }
+    .vid-col .lbl.ours { color: #7b2d5e; }
+    .scene-title { font-weight: 700; text-align: center; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- Hero: title / authors / links -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">MACRO: Training-free Multi-plane Attention for Closeup Render Optimization</h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a href="https://nitzanhod.github.io/" target="_blank">Nitzan Hodos</a><sup>1,2</sup>,</span>
+            <span class="author-block">Roy Amoyal<sup>1,3</sup>,</span>
+            <span class="author-block">Lior Fritz<sup>1</sup>,</span>
+            <span class="author-block">Ianir Ideses<sup>1</sup>,</span>
+            <span class="author-block">Sagie Benaim<sup>1,4</sup>,</span>
+            <span class="author-block">Netalee Efrat<sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Amazon Prime Video&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>2</sup>Technion &ndash; Israel Institute of Technology&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>3</sup>Ben Gurion University&nbsp;&nbsp;</span>
+            <span class="author-block"><sup>4</sup>Hebrew University of Jerusalem</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv (placeholder until ID is assigned) -->
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv (soon)</span>
+                </a>
+              </span>
+              <!-- Code -->
+              <span class="link-block">
+                <a href="https://github.com/NitzanHod/MACRO" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/teaser.jpg" alt="MACRO teaser: Reference, 3DGS, DiFix, MACRO, and GT close-up renders with detail crops.">
+      <p class="caption has-text-centered">
+        Rendering tight close-ups from a 3DGS trained only on sparse wide shots yields blurry, detail-starved output (3DGS).
+        Reference-conditioned diffusion (DiFix) still struggles at close range. <b>MACRO</b> recovers fine detail and matches the ground-truth close-up (GT).
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Abstract -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Close-up rendering, zooming into a scene well beyond any training camera, is important for virtual production and interactive 3D content, yet remains an open challenge. 3D Gaussian splatting (3DGS) enables high-fidelity, real-time novel view synthesis, but its rendering quality degrades at close range. Recent diffusion-based methods that enhance the rendering by conditioning on reference images from the training set produce significant artifacts in this setting. We analyze this failure and identify its root cause: the scale gap between the close-up and reference views. We show that the features in reference-conditioned enhancement models are not scale-invariant, causing cross-view attention to retrieve incorrect correspondences when the same content appears at different scales, and that this mismatch cannot be corrected in latent space because the VAE encoder is not scale-equivariant. Building on this analysis we introduce MACRO, Multi-plane Attention for Closeup Render Optimization, a training-free method for high-quality close-up novel view synthesis from 3DGS. MACRO resolves the scale gap by leveraging the scene's known 3D structure: it decomposes the close-up into depth planes, crops and resizes references in image space to match the scale of each plane before encoding, and applies a depth-aware attention mask so each token attends only to scale-matched references. The method requires no architectural changes or additional training. We further contribute two new close-up novel view synthesis benchmarks, the first standardized evaluation protocol for this setting, and demonstrate state-of-the-art results on both, outperforming existing 3DGS and diffusion-based methods on both reconstruction and perceptual metrics.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scale-gap analysis (core insight) -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">The Scale Gap</h2>
+        <div class="content has-text-justified">
+          <p>
+            Reference-conditioned enhancement fails at close range because the close-up and the wide-shot references show the same content at very different scales.
+            <b>(a)</b> As the scale ratio between a query and its reference grows, cross-view attention increasingly retrieves the wrong correspondences &mdash; token-matching accuracy drops sharply across every UNet block.
+            <b>(b)</b> This cannot be fixed in latent space: the VAE encoder is not scale-equivariant, so latent cosine similarity between the same content at different scales degrades steadily with the scale ratio.
+          </p>
+        </div>
+        <img src="static/images/scale_analysis.png" alt="Scale analysis: token-matching accuracy and VAE latent cosine similarity both degrade as scale ratio increases.">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Method -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Method</h2>
+        <div class="content has-text-justified">
+          <p>
+            MACRO leverages the scene's known 3D structure to close the scale gap, with no architectural changes or additional training.
+            Given a close-up camera and a 3DGS trained on sparse wide shots, we render the close-up and its depth, then decompose the close-up into <em>M</em> depth planes.
+            For each plane we crop and resize the selected references in image space so their content matches the plane's scale (<em>scale-matched crops</em>) before encoding them with the frozen VAE.
+            A depth-aware attention mask in the reference-mixing layers then routes each token to attend only to the references matched to its depth plane.
+          </p>
+        </div>
+        <img src="static/images/method.png" alt="MACRO method: depth-plane decomposition, scale-matched reference crops, and masked reference mixing inside a frozen diffusion UNet.">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Qualitative comparisons -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Qualitative Comparisons</h2>
+
+        <h3 class="title is-5" style="margin-top:1.5rem;">DL3DV-Closeup</h3>
+        <img src="static/images/results_ds1.jpg" alt="DL3DV-Closeup qualitative comparison against all baselines with zoom crops.">
+        <p class="caption">DL3DV-Closeup: MACRO recovers fine structure and legible text that all prior 3DGS and diffusion baselines miss.</p>
+
+        <h3 class="title is-5" style="margin-top:2rem;">MobileClose-10</h3>
+        <img src="static/images/ds3_FINAL_paper_figure.jpg" alt="MobileClose-10 qualitative comparison against all baselines with zoom crops.">
+        <p class="caption">MobileClose-10 (iPhone captures): MACRO produces sharp close-ups that stay faithful to the ground truth. Per closeup metrics are also reported (PSNR and DreamSim).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trajectory videos -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Trajectory Videos</h2>
+        <div class="content has-text-justified" style="max-width:800px;margin:0 auto 1.5rem auto;">
+          <p>
+            Rendered 3DGS camera trajectories (no re-training). Each tile shows the raw 3DGS render, DiFix, and <b>MACRO</b> side by side.
+            <b>Wide&rarr;Close&rarr;Wide</b> zooms in to the close-up and back out; <b>Zoom-then-Forward</b> zooms in and then continues <em>past</em> the close-up along the optical axis, where MACRO's advantage is most visible.
+          </p>
+        </div>
+
+        <div class="traj-tabs">
+          <button class="active" data-pane="wcw" onclick="showTraj('wcw')">Wide &rarr; Close &rarr; Wide</button>
+          <button data-pane="ztf" onclick="showTraj('ztf')">Zoom-then-Forward</button>
+        </div>
+
+        <div class="traj-pane active" id="pane-wcw"></div>
+        <div class="traj-pane" id="pane-ztf"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BibTeX -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">BibTeX</h2>
+    <pre><code>@article{hodos2026macro,
+  title         = {MACRO: Training-free Multi-plane Attention for Closeup Render Optimization},
+  author        = {Nitzan Hodos and Roy Amoyal and Lior Fritz and Ianir Ideses and Sagie Benaim and Netalee Efrat},
+  year          = {TBD},
+  journal       = {TBD},
+  eprint        = {TBD},
+  archivePrefix = {arXiv},
+  primaryClass  = {TBD},
+  url           = {TBD}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This page uses the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>,
+            adapted from the <a href="https://nerfies.github.io/" target="_blank">Nerfies</a> project page.
+            Licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Cherry-picked keepers, chosen independently per trajectory type.
+function label(ds, id) {
+  const pretty = id.replace(/_/g, ' ');
+  return (ds === 'ds1' ? 'DL3DV-Closeup' : 'MobileClose-10') + ' — ' + pretty;
+}
+function mk(entries) { return entries.map(([ds, id]) => ({ ds, id, title: label(ds, id) })); }
+
+const SCENES = {
+  ztf: mk([
+    ['ds3', 'cactus'],
+    ['ds3', 'outside_toys'],
+    ['ds1', 'd1b3a0b3'],
+    ['ds1', 'a401469c'],
+    ['ds1', '3bb3bb4d'],
+  ]),
+  wcw: mk([
+    ['ds3', 'armoire'],
+    ['ds3', 'sofa_guitar'],
+    ['ds1', '093ef327'],
+    ['ds1', 'd1b3a0b3'],
+    ['ds1', '1ba74c22'],
+  ]),
+};
+
+function tile(scene, traj) {
+  const base = `static/videos/${scene.ds}_${scene.id}_${traj}`;
+  const vid = (suffix) => `<video autoplay muted loop playsinline preload="metadata"><source src="${base}_${suffix}.mp4" type="video/mp4"></video>`;
+  return `
+    <div class="vid-tile">
+      <div class="scene-title">${scene.title}</div>
+      <div class="vid-row">
+        <div class="vid-col"><div class="lbl">3DGS</div>${vid('3dgs')}</div>
+        <div class="vid-col"><div class="lbl">DiFix</div>${vid('difix')}</div>
+        <div class="vid-col"><div class="lbl ours">MACRO (ours)</div>${vid('macro')}</div>
+      </div>
+    </div>`;
+}
+
+function renderPanes() {
+  for (const traj of ['wcw', 'ztf']) {
+    document.getElementById('pane-' + traj).innerHTML =
+      SCENES[traj].map(s => tile(s, traj)).join('');
+  }
+}
+
+function showTraj(which) {
+  document.querySelectorAll('.traj-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.traj-tabs button').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + which).classList.add('active');
+  document.querySelector(`.traj-tabs button[data-pane="${which}"]`).classList.add('active');
+}
+
+renderPanes();
+</script>
+
+</body>
+</html>
