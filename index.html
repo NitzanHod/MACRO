@@ -264,7 +264,8 @@ const SCENES = mk([
 
 function tile(scene) {
   const base = `static/videos/${scene.ds}_${scene.id}_wcw`;
-  const vid = (suffix) => `<video autoplay muted loop playsinline preload="metadata"><source src="${base}_${suffix}.mp4" type="video/mp4"></video>`;
+  // preload=none + data-src: nothing is fetched until the tile scrolls into view.
+  const vid = (suffix) => `<video muted loop playsinline preload="none" data-src="${base}_${suffix}.mp4"></video>`;
   return `
     <div class="vid-tile">
       <div class="scene-title">${scene.title}</div>
@@ -277,6 +278,41 @@ function tile(scene) {
 }
 
 document.getElementById('pane-wcw').innerHTML = SCENES.map(tile).join('');
+
+// --- Lazy-load + trio sync ------------------------------------------------
+// Load a tile's 3 videos only when it nears the viewport; once all three can
+// play through, start them together and re-sync each loop so columns never drift.
+function startTrio(tileEl) {
+  const vids = Array.from(tileEl.querySelectorAll('video'));
+  if (tileEl.dataset.loaded) return;
+  tileEl.dataset.loaded = '1';
+  vids.forEach(v => { v.src = v.dataset.src; v.load(); });
+
+  let ready = 0;
+  const onReady = () => {
+    if (++ready < vids.length) return;
+    // All buffered: reset to frame 0 and play in lockstep.
+    vids.forEach(v => { v.currentTime = 0; });
+    vids.forEach(v => v.play().catch(() => {}));
+  };
+  vids.forEach(v => v.addEventListener('canplaythrough', onReady, { once: true }));
+
+  // Anti-drift: whenever the leader (3DGS) loops, snap the others back to it.
+  const leader = vids[0];
+  leader.addEventListener('timeupdate', () => {
+    vids.slice(1).forEach(v => {
+      if (Math.abs(v.currentTime - leader.currentTime) > 0.15) {
+        v.currentTime = leader.currentTime;
+      }
+    });
+  });
+}
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { startTrio(e.target); io.unobserve(e.target); } });
+}, { rootMargin: '300px 0px' });  // begin loading a bit before the tile is visible
+
+document.querySelectorAll('#pane-wcw .vid-tile').forEach(t => io.observe(t));
 </script>
 
 </body>
