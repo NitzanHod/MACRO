@@ -43,14 +43,6 @@
 
   <style>
     .caption { color: #555; font-size: 0.95rem; margin-top: 0.6rem; }
-    .traj-tabs { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; }
-    .traj-tabs button {
-      border: 1px solid #7b2d5e; background: #fff; color: #7b2d5e;
-      padding: 0.5rem 1.25rem; border-radius: 999px; cursor: pointer; font-weight: 600;
-    }
-    .traj-tabs button.active { background: #7b2d5e; color: #fff; border-color: #7b2d5e; }
-    .traj-pane { display: none; }
-    .traj-pane.active { display: block; }
     .vid-tile { margin-bottom: 2.5rem; }
     .vid-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
     .vid-col { flex: 1 1 0; min-width: 200px; max-width: 33%; text-align: center; }
@@ -205,18 +197,13 @@
         <h2 class="title is-3">Trajectory Videos</h2>
         <div class="content has-text-justified" style="max-width:800px;margin:0 auto 1.5rem auto;">
           <p>
-            Rendered 3DGS camera trajectories (no re-training). Each tile shows the raw 3DGS render, DiFix, and <b>MACRO</b> side by side.
-            <b>Wide&rarr;Close&rarr;Wide</b> zooms in to the close-up and back out; <b>Zoom-then-Forward</b> zooms in and then continues <em>past</em> the close-up along the optical axis, where MACRO's advantage is most visible.
+            Rendered 3DGS camera trajectories (no re-training). The camera zooms from a training-view wide
+            shot down to the close-up and back out, lingering on the close-up. Each tile shows the raw 3DGS
+            render, DiFix, and <b>MACRO</b> side by side.
           </p>
         </div>
 
-        <div class="traj-tabs">
-          <button class="active" data-pane="wcw" onclick="showTraj('wcw')">Wide &rarr; Close &rarr; Wide</button>
-          <button data-pane="ztf" onclick="showTraj('ztf')">Zoom-then-Forward</button>
-        </div>
-
         <div class="traj-pane active" id="pane-wcw"></div>
-        <div class="traj-pane" id="pane-ztf"></div>
       </div>
     </div>
   </div>
@@ -256,32 +243,27 @@
 </footer>
 
 <script>
-// Cherry-picked keepers, chosen independently per trajectory type.
+// Wide->Close->Wide trajectory scenes (eased pacing, lingering at the close-up).
 function label(ds, id) {
   const pretty = id.replace(/_/g, ' ');
   return (ds === 'ds1' ? 'DL3DV-Closeup' : 'MobileClose-10') + ' — ' + pretty;
 }
 function mk(entries) { return entries.map(([ds, id]) => ({ ds, id, title: label(ds, id) })); }
 
-const SCENES = {
-  ztf: mk([
-    ['ds3', 'cactus'],
-    ['ds3', 'outside_toys'],
-    ['ds1', 'd1b3a0b3'],
-    ['ds1', 'a401469c'],
-    ['ds1', '3bb3bb4d'],
-  ]),
-  wcw: mk([
-    ['ds3', 'armoire'],
-    ['ds3', 'sofa_guitar'],
-    ['ds1', '093ef327'],
-    ['ds1', 'd1b3a0b3'],
-    ['ds1', '1ba74c22'],
-  ]),
-};
+const SCENES = mk([
+  ['ds3', 'armoire'],
+  ['ds3', 'cactus'],
+  ['ds3', 'outside_toys'],
+  ['ds3', 'pipes'],
+  ['ds3', 'sofa_guitar'],
+  ['ds1', '093ef327'],
+  ['ds1', '3bb3bb4d'],
+  ['ds1', 'a401469c'],
+  ['ds1', 'd1b3a0b3'],
+]);
 
-function tile(scene, traj) {
-  const base = `static/videos/${scene.ds}_${scene.id}_${traj}`;
+function tile(scene) {
+  const base = `static/videos/${scene.ds}_${scene.id}_wcw`;
   const vid = (suffix) => `<video autoplay muted loop playsinline preload="metadata"><source src="${base}_${suffix}.mp4" type="video/mp4"></video>`;
   return `
     <div class="vid-tile">
@@ -294,21 +276,7 @@ function tile(scene, traj) {
     </div>`;
 }
 
-function renderPanes() {
-  for (const traj of ['wcw', 'ztf']) {
-    document.getElementById('pane-' + traj).innerHTML =
-      SCENES[traj].map(s => tile(s, traj)).join('');
-  }
-}
-
-function showTraj(which) {
-  document.querySelectorAll('.traj-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.traj-tabs button').forEach(b => b.classList.remove('active'));
-  document.getElementById('pane-' + which).classList.add('active');
-  document.querySelector(`.traj-tabs button[data-pane="${which}"]`).classList.add('active');
-}
-
-renderPanes();
+document.getElementById('pane-wcw').innerHTML = SCENES.map(tile).join('');
 </script>
 
 </body>
