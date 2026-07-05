@@ -50,9 +50,56 @@
     .vid-col .lbl { font-weight: 600; margin-bottom: 4px; }
     .vid-col .lbl.ours { color: #7b2d5e; }
     .scene-title { font-weight: 700; text-align: center; margin-bottom: 0.5rem; }
+
+    /* Theme toggle button */
+    #theme-toggle {
+      position: fixed; top: 1rem; right: 1rem; z-index: 50;
+      width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      border: 1px solid #dbdbdb; background: #fff; color: #333;
+      cursor: pointer; font-size: 1.1rem; line-height: 1;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    }
+
+    /* --- Dark theme --------------------------------------------------- */
+    html[data-theme="dark"] { background: #14161a; }
+    html[data-theme="dark"] body { background: #14161a; color: #e6e6e6; }
+    html[data-theme="dark"] .hero,
+    html[data-theme="dark"] .section,
+    html[data-theme="dark"] .hero.is-light,
+    html[data-theme="dark"] .section.hero.is-light { background-color: #14161a !important; }
+    html[data-theme="dark"] .title,
+    html[data-theme="dark"] .subtitle,
+    html[data-theme="dark"] .content,
+    html[data-theme="dark"] .publication-authors,
+    html[data-theme="dark"] .scene-title,
+    html[data-theme="dark"] .vid-col .lbl { color: #e6e6e6 !important; }
+    html[data-theme="dark"] .caption { color: #a9adb4 !important; }
+    html[data-theme="dark"] a { color: #9db7ff; }
+    html[data-theme="dark"] .vid-col .lbl.ours { color: #c98bbb !important; }
+    html[data-theme="dark"] #BibTeX pre,
+    html[data-theme="dark"] #BibTeX pre code,
+    html[data-theme="dark"] #BibTeX code { background: #1e2127 !important; color: #e6e6e6 !important; }
+    html[data-theme="dark"] .footer { background-color: #0f1115 !important; }
+    html[data-theme="dark"] .footer .content { color: #a9adb4 !important; }
+    html[data-theme="dark"] #theme-toggle {
+      background: #1e2127; color: #f2d06b; border-color: #333;
+    }
+    /* Keep the dark hero buttons legible in dark mode */
+    html[data-theme="dark"] .button.is-dark { background:#2b2f36; color:#e6e6e6; border-color:#3a3f47; }
   </style>
 </head>
 <body>
+<button id="theme-toggle" type="button" title="Toggle light/dark" aria-label="Toggle light/dark theme">🌙</button>
+<script>
+  // Apply theme ASAP to avoid a flash of the wrong theme.
+  (function () {
+    var saved = null;
+    try { saved = localStorage.getItem('macro-theme'); } catch (e) {}
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var theme = saved || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 
 <!-- Hero: title / authors / links -->
 <section class="hero">
@@ -243,6 +290,20 @@
 </footer>
 
 <script>
+// Theme toggle: flip data-theme, persist choice, sync the button icon.
+(function () {
+  const btn = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+  const syncIcon = () => { btn.textContent = root.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; };
+  syncIcon();
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('macro-theme', next); } catch (e) {}
+    syncIcon();
+  });
+})();
+
 // Wide->Close->Wide trajectory scenes (eased pacing, lingering at the close-up).
 function label(ds, id) {
   const pretty = id.replace(/_/g, ' ');
