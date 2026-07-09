@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Data & weights (downloaded from the release Drive — not committed).
+# Ignore everything under data/ EXCEPT the DL3DV-Closeup benchmark splits,
+# which are the actual deliverable. (Must re-include the parent dir first.)
+data/*
+!data/DL3DV-Closeup/
+DS1/
+DS3/
+pft_sr_weights/
+*.pth
+*.pt
+
+# Outputs
+results/
+results_*/
+*_out/
+outputs/
+*.mp4
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

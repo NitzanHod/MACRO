@@ -1,0 +1,43 @@
+# MACRO — public release dependencies (Python 3.9).
+# Install into a fresh env, then: pip install gsplat==1.4.0 (needs CUDA toolkit).
+
+# --- core DL ---
+torch==2.8.0
+torchvision==0.23.0
+torchmetrics==1.8.2
+pytorch-msssim==1.0.0
+
+# --- 3DGS rendering (build against your CUDA; see README) ---
+gsplat==1.4.0
+
+# --- DiFix diffusion enhancer ---
+diffusers==0.25.1
+transformers==4.38.0
+huggingface-hub==0.25.1
+peft==0.9.0          # pin: newer peft breaks the DreamSim/DiFix LoRA configs
+xformers
+einops
+
+# --- PFT-SR (reference super-resolution) ---
+basicsr
+realesrgan
+
+# --- metrics ---
+lpips==0.1.4
+dreamsim
+timm==0.6.7
+
+# --- COLMAP / data ---
+pycolmap==3.13.0
+opencv-python-headless
+imageio[ffmpeg]
+numpy
+pillow
+scipy
+scikit-learn          # examples/gsplat/utils.py knn() (NearestNeighbors)
+tifffile              # imageio backend for float32 depth .tiff read/write
+tqdm
+filelock
+matplotlib            # examples/gsplat/utils.py depth/colormap viz
+packaging             # difix_pipeline.py version check
+typing_extensions
