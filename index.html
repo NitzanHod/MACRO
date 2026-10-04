@@ -86,6 +86,14 @@
     }
     /* Keep the dark hero buttons legible in dark mode */
     html[data-theme="dark"] .button.is-dark { background:#2b2f36; color:#e6e6e6; border-color:#3a3f47; }
+    /* Venue announcement banner */
+    .venue-banner {
+      display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; border-radius: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      font-size: 1.5rem; font-weight: 800; color: #fff; letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    @media (max-width: 768px) { .venue-banner { font-size: 1.05rem; padding: 0.6rem 1.25rem; } }
   </style>
 </head>
 <body>
@@ -149,6 +157,10 @@
                 </a>
               </span>
             </div>
+          </div>
+          <!-- Venue announcement -->
+          <div class="has-text-centered">
+            <span class="venue-banner">&#127881; Accepted to NeurIPS 2026 &ndash; Spotlight &#127881;</span>
           </div>
         </div>
       </div>
@@ -237,7 +249,7 @@
 
         <h3 class="title is-5" style="margin-top:2rem;">MobileClose-10</h3>
         <img src="static/images/ds3_FINAL_paper_figure.jpg" alt="MobileClose-10 qualitative comparison against all baselines with zoom crops.">
-        <p class="caption">MobileClose-10 (iPhone captures): MACRO produces sharp close-ups that stay faithful to the ground truth. Per closeup metrics are also reported (PSNR and DreamSim).</p>
+        <p class="caption">MobileClose-10 (iPhone captures): MACRO produces sharp close-ups that stay faithful to the ground truth.</p>
       </div>
     </div>
   </div>
@@ -267,15 +279,14 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title is-3">BibTeX</h2>
-    <pre><code>@article{hodos2026macro,
-  title         = {MACRO: Training-free Multi-plane Attention for Closeup Render Optimization},
-  author        = {Nitzan Hodos and Roy Amoyal and Lior Fritz and Ianir Ideses and Sagie Benaim and Netalee Efrat},
-  year          = {TBD},
-  journal       = {TBD},
-  eprint        = {TBD},
-  archivePrefix = {arXiv},
-  primaryClass  = {TBD},
-  url           = {TBD}
+    <pre><code>@misc{macro2026,
+      title={MACRO: Training-free Multi-plane Attention for Closeup Render Optimization},
+      author={Nitzan Hodos and Roy Amoyal and Lior Fritz and Ianir Ideses and Sagie Benaim and Netalee Efrat},
+      year={2026},
+      eprint={2607.03875},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2607.03875},
 }</code></pre>
   </div>
 </section>
