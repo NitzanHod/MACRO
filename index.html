@@ -103,8 +103,8 @@
   (function () {
     var saved = null;
     try { saved = localStorage.getItem('macro-theme'); } catch (e) {}
-    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved || (prefersDark ? 'dark' : 'light');
+    // Dark by default; a saved toggle choice still wins.
+    var theme = saved || 'dark';
     document.documentElement.setAttribute('data-theme', theme);
   })();
 </script>
